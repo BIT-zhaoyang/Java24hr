@@ -1,0 +1,60 @@
+1. To make an object serializable, the object has to implement the 
+Serializable interface.
+
+2. The Serializable interface doesn't define any methods, so the object which
+implements this interface has nothing to implement. This kind of interface is
+called marker interface. The marker interface are just affecting the way
+compiler generates the bytecode.
+
+3. Serialization is often implemented internally by various Java Frameworks.
+The benefits and application of serialization include:
+    1. Distribution of the Java objects between different JVMs.
+    2. Object persistence for future use.
+    3. Load and unload objects to free the JVM's memory.
+
+4. To serialize an object, all fields in the object must be serializable. By
+default, all primitive types are serializable. For customized types, these
+types have to be serializable too, which means they also have to implement the
+Serializable interface by themselves.
+
+5. If one field B in an object A is not serializable, but we still want to
+serialize A, then we can declare the filed B with 'transient'. Fields declared
+with this modifier will not be serialized. They will still be recorded, but
+with a dummy value. This trick can also be used on some sensitive information
+so that they will not be recorded when doing serialization.
+
+6. About Class Evolution
+While I was writing the sample code, I did a few experiments. One example is
+that, to see the deserialization really succeeds, I added a toString()
+function in the Employee class. After that, I tried to deserialize the object
+directly, after the modification, from a previously recorded serialization
+file. Then I found that the deserialization failed. I re-ran the serialization
+classA and then follows the deserialization classB, this time it worked.
+
+So I realized that, after you serialized an object, you can't modify it's
+definition. But this sounds very constrained. What if I really want to modify
+my definition of my class? Should I run all the serilization processes again?
+That's definitely clumsy. 
+
+Here comes the remedy: serial version unique ID. This number is computed
+according to the properties of the serializable object, such as the name, the
+implemented interfaces, signatures of non-private methods. So, each time I
+modify the definition of the serializable class, the SSUID changes. Then the
+JVM thinks the two versions are not compatible, even they do. To solve this
+problem, we can declare a 'static final' variable called serialVersionUID in
+the definition of our class. As long as in the modified class definition, the
+serialVersionID doesn't change, the JVM will treat them as equal.
+
+With the help of this serialVersionID, in the new version of the class, we can 
+add new fields, new methods into the class or even remove a field. As long as
+the remained fields, which will be deserialized, have the same data type,
+there will be no error.
+
+7. One more trick of using serialization is to make a deep copy of an object.
+Every object in Java inheritance from the root Object class. The root Object
+class has a clone() method. But in order to use this method, the object which
+we want to have a deep copy of, must implement the Cloneable interface. But
+sometimes the target object doesn't implement it. To solve this problem, we
+can serialize the target object into a byte array and then deserialize it.
+This creates a deep copy of the target object in no time.
+
