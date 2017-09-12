@@ -1,0 +1,50 @@
+1. Two ways to make a class multi-thread executable:
+    1). Inherit from Thread class
+    2). Implement Runnable or Callable interface.
+
+    To use the first method, the target class has to override the `run()`
+method. The code in the override `run()` function will be the code executed in
+parallel.
+
+    To use the second method, the target class has to implement the `run()`
+method required by the interface Runnable. The `run()` method is the only one
+method in Runnable. Thus, Runnable is a functional interface. The code inside
+the `run()` method is the part need multi-thread execution.
+
+    However, using the second way is a bit more cumbersome. After
+instantiating such a target class, you have to pass it to Thread class to
+create a Thread instance. Then you can call start on this created thread.
+
+2. SLEEPING THREADS
+    There is a static method in the class Thread, called sleep(long millis). This
+function can be called in the `run()` method(I guess it can by the `run()`
+method in both Runnable and Thread). This will let the target class sleep for
+the given millisecond.
+
+3. HOW TO KILL A THREAD
+    The recommended way is to declare a volatile filed in the target
+class(namely the class that can be multi-thread executed). Then inside the
+`run()` method, the class check this flag filed periodically.
+    The volatile tells the JVM that, this field can be modified by other
+threads. But I think this is not important, since we always declare field as
+private. Another point of volatile is that, it tell the JVM to never cache
+this variable in CPU's registers, so that the value change in this field can
+be reflected in time.
+
+4. THREAD PRIORITIES
+    There are 10 priorities in total defined in the Thread class. The order of
+executing threads depends on the priorities. If two threads have equal
+priorities, then the schedule algorithm from the OS is used to determine the
+order.
+
+5. SYNCHRONIZATION
+    To avoid race condition, the keyword `synchronized` can be used. I feel
+like the `synchronized` keyword can by used anywhere... To reduce delay as much 
+as possible, this keyword can be applied to a certain block of codes in a method.
+Namely, there is no need to apply this keyword when declaring a method. The
+code covered in the `synchronized` block will be executed by a single thread
+at the same time.
+
+    However, more efficient API reentrantLock() for locking the code is available. 
+
+
