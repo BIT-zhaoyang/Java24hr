@@ -1,0 +1,52 @@
+1. Stream API feels like a fancy collection of data, which enables the user to
+declare a set of operations to be applied on the collection. The operations
+includes, map, reduce, find, filter, etc.
+
+2. Operations avaialbe to stream can be categorized into two classes:
+intermediate and terminal. The difference is that, multiple intermediate
+operations can be applied to a stream object while only one terminal operation
+can be applied.
+
+Intermediate operation returns a Stream object while terminal operation
+returns anything but a Stream object.
+
+3. One interesting thing is that, the intermediate operation will not be
+executed until a terminal opertaion is called.
+
+4. Streams are immutable, thus neither intermediate nor terminal operations
+can modify the source data.
+
+5. SORTING 
+5.1 Sorting in Collections
+Before talking about using 'sorted()' in stream, we should start by looking
+into how to sort items in Java collections. To sort collection items, two
+solutions are available. One is to make the contained collection item to
+implement the Comparable<> interface. This solution is a bit clumsy since you
+have to modify the class type code, which may not be possible in some cases.
+The other solution is to provide a Comparator interface to the 'sort()' method
+of the targeted collection. The functional Comparator interface has only one
+static method `comparing()'. This method is a extractor, which returns a field
+should be used for comparison. 
+
+    Tips: The functional interface can be implemented using lambda expression. The
+    extractor can be also implemented by simply passing the getter from the target
+    Class to it.  
+
+The Comparator can also be chained. After calling the 'comparing()' method,
+we can call thenComparing() method to chain another criteria. One caveat is,
+if we are going to implment this in lambda expression, we have to explicitly
+specify the argument type.
+
+One last thing to note is, sorting in collections will mutate the collection.
+While sorting in streams is immutable.
+
+5.2 Sorting in Stream
+Sorting in Stream is easy once we understood how to sort in Collections. To
+sort a stream, just use (object).stream().sorted(Comparator)...
+
+6. Stream can be converted from normal collections. Stream can also be created
+from other data sources. Remember that, stream is an abstraction of a
+collection of data. The data in stream can be either finite or infinite. 
+
+7. Applying limit(), findFirst(), etc can restrict the size of infinite
+stream.

@@ -17,7 +17,7 @@ public class TestThreads3Lambda {
 		
 		Thread marketNews = new Thread(mn, "Market News");
 		marketNews.start();
-//		marketNews.interrupt();
+		marketNews.interrupt();
 		
 		Runnable port = () -> {
 			try {
